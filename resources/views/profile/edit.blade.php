@@ -28,9 +28,11 @@
                     </form>
 
                    @else
-
-                    {!! auth()->user()->twoFactorQrCodeSvg() !!}
-                    <form action="/user/two-factor-authentication" method="post">
+                    <div class="p-2 inline-block bg-white rounded-lg">
+                        {!! auth()->user()->twoFactorQrCodeSvg() !!}
+                    </div>
+                    
+                    <form action="/user/two-factor-authentication" method="post" class="mt-4">
                         @csrf
                         @method('DELETE')
                         <x-danger-button>Disable</x-danger-button>
