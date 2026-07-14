@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\StudentCreated;
+use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
-use App\Events\StudentCreated; // Added this to use your event
-use App\Http\Requests\StoreStudentRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class StudentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of students.
      */
-    public function index()
+    public function index(): View
     {
         $students = Student::query()
             ->orderBy('last_name')
@@ -26,41 +25,29 @@ class StudentController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new student.
      */
-    public function create()
+    public function create(): View
     {
         return view('students.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created student.
      */
     public function store(StoreStudentRequest $request): RedirectResponse
     {
-        // Using your requested validation logic
-        
-    
-
         $student = Student::create($request->validated());
 
-        // Broadcast the event to others
-        broadcast(new StudentCreated($student))->toOthers();
+        broadcast(new StudentCreated($student));
 
-        return redirect('/students')
-            ->with('success', 'Student added successfully.');
+        return redirect()
+            ->route('students.index')
+            ->with('status', 'student-created');
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified student.
      */
     public function edit(Student $student): View
     {
@@ -68,7 +55,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified student.
      */
     public function update(UpdateStudentRequest $request, Student $student): RedirectResponse
     {
@@ -80,7 +67,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified student.
      */
     public function destroy(Student $student): RedirectResponse
     {

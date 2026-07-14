@@ -13,31 +13,47 @@ class StudentCreated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public Student $student) {}
-
-    public function broadcastOn(): array
+    /**
+     * Create a new event instance.
+     */
+    public function __construct(public Student $student)
     {
-        return [new Channel('students')];
+        //
     }
 
-    // Add these methods inside StudentCreated class
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return array<int, Channel>
+     */
+    public function broadcastOn(): array
+    {
+        return [
+            new Channel('students'),
+        ];
+    }
 
-public function broadcastAs(): string
-{
-    return 'student.created';
-}
+    public function broadcastAs(): string
+    {
+        return 'student.created';
+    }
 
-public function broadcastWith(): array
-{
-    return [
-        'id' => $this->student->id,
-        'student_number' => $this->student->student_number,
-        'first_name' => $this->student->first_name,
-        'last_name' => $this->student->last_name,
-        'email' => $this->student->email,
-        'course' => $this->student->course,
-        'year_level' => $this->student->year_level,
-    ];
-}
-
+    /**
+     * @return array<string, mixed>
+     */
+    public function broadcastWith(): array
+    {
+        return [
+            'id' => $this->student->id,
+            'student_number' => $this->student->student_number,
+            'first_name' => $this->student->first_name,
+            'last_name' => $this->student->last_name,
+            'email' => $this->student->email,
+            'course' => $this->student->course,
+            'year_level' => $this->student->year_level,
+            'year_level_label' => $this->student->year_level_label,
+            'edit_url' => route('students.edit', $this->student),
+            'destroy_url' => route('students.destroy', $this->student),
+        ];
+    }
 }
