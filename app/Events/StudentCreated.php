@@ -20,6 +20,7 @@ class StudentCreated implements ShouldBroadcastNow
         return [new Channel('students')];
     }
 
+    // Add these methods inside StudentCreated class
 
 public function broadcastAs(): string
 {
@@ -31,7 +32,9 @@ public function broadcastWith(): array
     return [
         'id' => $this->student->id,
         'student_number' => $this->student->student_number,
-        'name' => $this->student->first_name . ' ' . $this->student->last_name,
+        'first_name' => $this->student->first_name,
+        'last_name' => $this->student->last_name,
+        'email' => $this->student->email,
         'course' => $this->student->course,
         'year_level' => $this->student->year_level,
     ];

@@ -12,16 +12,15 @@ Alpine.start();
 
 import './echo';
 
-
-import './bootstrap';
-
+// --- Added Real-time Listener ---
 window.Echo.channel('students')
     .listen('.student.created', (e) => {
         const alertBox = document.getElementById('student-alert');
         const tableBody = document.getElementById('student-table');
 
         if (alertBox) {
-            alertBox.innerHTML = '<div class="alert alert-success">New student added:';
+            // Note: You might want to close the HTML string properly depending on your logic
+            alertBox.innerHTML = '<div class="alert alert-success">New student added: ' + e.name + '</div>';
         }
 
         if (tableBody) {
