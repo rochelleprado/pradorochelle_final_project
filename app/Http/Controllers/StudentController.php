@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
 use App\Events\StudentCreated; // Added this to use your event
+use App\Http\Requests\StoreStudentRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -35,18 +36,13 @@ class StudentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreStudentRequest $request): RedirectResponse
     {
         // Using your requested validation logic
-        $validated = $request->validate([
-            'student_number' => 'required|unique:students,student_number',
-            'first_name' => 'required|min:2',
-            'last_name' => 'required|min:2',
-            'course' => 'required',
-            'year_level' => 'required',
-        ]);
+        
+    
 
-        $student = Student::create($validated);
+        $student = Student::create($request->validated());
 
         // Broadcast the event to others
         broadcast(new StudentCreated($student))->toOthers();

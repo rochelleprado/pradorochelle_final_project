@@ -20,7 +20,7 @@ window.Echo.channel('students')
 
         if (alertBox) {
             // Note: You might want to close the HTML string properly depending on your logic
-            alertBox.innerHTML = '<div class="alert alert-success">New student added: ' + e.name + '</div>';
+            alertBox.innerHTML = '<div class="alert alert-success">New student added: ' + e.first_name +'' + e.last_name +'</div>';
         }
 
         if (tableBody) {
