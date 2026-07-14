@@ -21,7 +21,7 @@
 
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                   @if (!auth()->user()->hasEnabledTwoFactorAuthentication())
+                   @if (!auth()->user()->two_factor_secret)
                     <form action="/user/two-factor-authentication" method="post">
                         @csrf
                         <x-primary-button>Enable 2FA</x-primary-button>

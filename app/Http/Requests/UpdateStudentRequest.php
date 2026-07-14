@@ -35,8 +35,13 @@ class UpdateStudentRequest extends FormRequest
                 'email', 
                 'max:255', 
                 Rule::unique('students', 'email')->ignore($studentId)
-                ],
-            'student_number' => ['required', 'string', 'max:255', 'unique:students,student_number'],
+            ],
+            'student_number' => [
+                'required', 
+                'string', 
+                'max:255', 
+                Rule::unique('students', 'student_number')->ignore($studentId)
+            ],
             'year_level' => ['required', 'integer', Rule::in(array_keys(Student::yearLevels()))],
             'course' => ['required', 'string', 'max:255'],
         ];

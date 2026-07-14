@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
+use App\Events\StudentCreated; // Added this to use your event
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -35,13 +35,24 @@ class StudentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreStudentRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        Student::create($request->validated());
+        // Using your requested validation logic
+        $validated = $request->validate([
+            'student_number' => 'required|unique:students,student_number',
+            'first_name' => 'required|min:2',
+            'last_name' => 'required|min:2',
+            'course' => 'required',
+            'year_level' => 'required',
+        ]);
 
-        return redirect()
-            ->route('students.index')
-            ->with('status', 'student-created');
+        $student = Student::create($validated);
+
+        // Broadcast the event to others
+        broadcast(new StudentCreated($student))->toOthers();
+
+        return redirect('/students')
+            ->with('success', 'Student added successfully.');
     }
 
     /**
