@@ -11,3 +11,27 @@ Alpine.start();
  */
 
 import './echo';
+
+
+import './bootstrap';
+
+window.Echo.channel('students')
+    .listen('.student.created', (e) => {
+        const alertBox = document.getElementById('student-alert');
+        const tableBody = document.getElementById('student-table');
+
+        if (alertBox) {
+            alertBox.innerHTML = '<div class="alert alert-success">New student added:';
+        }
+
+        if (tableBody) {
+            tableBody.insertAdjacentHTML('afterbegin',
+                '<tr>' +
+                    '<td>' + e.student_number + '</td>' +
+                    '<td>' + e.name + '</td>' +
+                    '<td>' + e.course + '</td>' +
+                    '<td>' + e.year_level + '</td>' +
+                '</tr>'
+            );
+        }
+    });

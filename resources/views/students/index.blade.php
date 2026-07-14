@@ -74,7 +74,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700/80">
+                        <tbody id="student-table" class="divide-y divide-gray-100 dark:divide-gray-700/80">
                             @forelse ($students as $student)
                                 <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors">
                                     <td class="px-6 py-4 text-gray-900 dark:text-gray-100 font-medium whitespace-nowrap">
