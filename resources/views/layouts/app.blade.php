@@ -1,3 +1,6 @@
+Try AI directly in your favorite apps … Use Gemini to generate drafts and refine content, plus get Gemini Pro with access to Google's next-gen AI for ₱1,100 ₱275 for 3 months
+1
+100%
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -10,6 +13,17 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <script>
+            window.Laravel = {
+                reverb: {
+                    key: @js(config('broadcasting.connections.reverb.key')),
+                    host: @js(config('broadcasting.connections.reverb.options.host')),
+                    port: @js((int) config('broadcasting.connections.reverb.options.port')),
+                    scheme: @js(config('broadcasting.connections.reverb.options.scheme')),
+                },
+            };
+        </script>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])

@@ -1,3 +1,6 @@
+Try AI directly in your favorite apps … Use Gemini to generate drafts and refine content, plus get Gemini Pro with access to Google's next-gen AI for ₱1,100 ₱275 for 3 months
+1
+100%
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
@@ -19,6 +22,20 @@ const escapeHtml = (value) =>
         .replaceAll('>', '&gt;')
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#39;');
+
+const showStudentAlert = (message) => {
+    const alertBox = document.getElementById('student-alert');
+
+    if (!alertBox) {
+        return;
+    }
+
+    alertBox.innerHTML = `
+        <div class="px-4 py-3 rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/30 text-sm text-green-700 dark:text-green-300">
+            ${message}
+        </div>
+    `;
+};
 
 const buildStudentRow = (student) => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
@@ -75,17 +92,14 @@ const buildStudentRow = (student) => {
     `;
 };
 
-window.Echo.channel('students').listen('.student.created', (student) => {
-    const alertBox = document.getElementById('student-alert');
+const studentsChannel = window.Echo.channel('students');
+
+studentsChannel.listen('.student.created', (student) => {
     const tableBody = document.getElementById('student-table');
 
-    if (alertBox) {
-        alertBox.innerHTML = `
-            <div class="px-4 py-3 rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/30 text-sm text-green-700 dark:text-green-300">
-                New student added: ${escapeHtml(student.first_name)} ${escapeHtml(student.last_name)}
-            </div>
-        `;
-    }
+    showStudentAlert(
+        `New student added: ${escapeHtml(student.first_name)} ${escapeHtml(student.last_name)}`,
+    );
 
     if (!tableBody) {
         return;
@@ -97,4 +111,60 @@ window.Echo.channel('students').listen('.student.created', (student) => {
 
     tableBody.querySelector('[data-empty-state]')?.remove();
     tableBody.insertAdjacentHTML('afterbegin', buildStudentRow(student));
+});
+
+studentsChannel.listen('.student.updated', (student) => {
+    const tableBody = document.getElementById('student-table');
+    const existingRow = tableBody?.querySelector(`[data-student-id="${student.id}"]`);
+
+    showStudentAlert(
+        `Student updated: ${escapeHtml(student.first_name)} ${escapeHtml(student.last_name)}`,
+    );
+
+    if (!tableBody) {
+        return;
+    }
+
+    if (existingRow) {
+        existingRow.outerHTML = buildStudentRow(student);
+        return;
+    }
+
+    tableBody.querySelector('[data-empty-state]')?.remove();
+    tableBody.insertAdjacentHTML('afterbegin', buildStudentRow(student));
+});
+
+studentsChannel.listen('.student.deleted', (student) => {
+    const tableBody = document.getElementById('student-table');
+    const existingRow = tableBody?.querySelector(`[data-student-id="${student.id}"]`);
+
+    showStudentAlert(
+        `Student deleted: ${escapeHtml(student.first_name)} ${escapeHtml(student.last_name)}`,
+    );
+
+    if (!existingRow) {
+        return;
+    }
+
+    existingRow.remove();
+
+    if (tableBody && tableBody.children.length === 0) {
+        tableBody.insertAdjacentHTML(
+            'beforeend',
+            `
+                <tr data-empty-state>
+                    <td colspan="7" class="px-6 py-16 text-center">
+                        <div class="mx-auto max-w-sm">
+                            <p class="text-base font-medium text-gray-900 dark:text-gray-100">
+                                No students yet
+                            </p>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                Add your first student to start building the list.
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+            `,
+        );
+    }
 });
