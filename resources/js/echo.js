@@ -1,6 +1,3 @@
-Try AI directly in your favorite apps … Use Gemini to generate drafts and refine content, plus get Gemini Pro with access to Google's next-gen AI for ₱1,100 ₱275 for 3 months
-1
-100%
 import Echo from 'laravel-echo';
 
 import Pusher from 'pusher-js';
